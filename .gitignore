@@ -1,0 +1,65 @@
+# Large data files
+data/
+processed_data/
+
+# Trained model weights and embeddings
+scvi_model_hvg3k/
+scvi_model_optimized/
+scvi_results_hvg3k/
+scvi_results_6datasets/
+scanvi_model_hvg3k/
+scanvi_results_hvg3k/
+
+# Large result directories
+phase2_results/
+phase3_results/
+qc_results/
+annotation_results/
+validation_results/
+
+# Large AnnData / HDF5 files
+*.h5ad
+*.h5
+*.hdf5
+
+# Delivery package (large binary outputs)
+Project_Delivery/
+
+# Figures (reproducible from scripts)
+figures/
+
+# Python virtual environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# CV and cover letter (personal documents)
+Yue_Zhan_CV_RevolutionMedicines.docx
+Yue_Zhan_CoverLetter_RevolutionMedicines.docx
+generate_cv.py
+generate_cover_letter.py
+
+# Word temp lock files
+~$*
+
+# Claude Code settings
+.claude/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
