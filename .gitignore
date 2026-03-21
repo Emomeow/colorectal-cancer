@@ -1,65 +1,22 @@
-# Large data files
-data/
-processed_data/
+# Ignore everything by default
+*
 
-# Trained model weights and embeddings
-scvi_model_hvg3k/
-scvi_model_optimized/
-scvi_results_hvg3k/
-scvi_results_6datasets/
-scanvi_model_hvg3k/
-scanvi_results_hvg3k/
+# Un-ignore Project_Delivery and its contents
+!Project_Delivery/
+!Project_Delivery/**
 
-# Large result directories
-phase2_results/
-phase3_results/
-qc_results/
-annotation_results/
-validation_results/
+# Exclude large processed data files within Project_Delivery
+Project_Delivery/data/processed_data/*.h5ad
+Project_Delivery/data/processed_data/*.h5
+Project_Delivery/data/processed_data/*.hdf5
 
-# Large AnnData / HDF5 files
-*.h5ad
-*.h5
-*.hdf5
+# Un-ignore README and gitignore themselves
+!README.md
+!.gitignore
 
-# Delivery package (large binary outputs)
-Project_Delivery/
-
-# Figures (reproducible from scripts)
-figures/
-
-# Python virtual environment
-venv/
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-dist/
-build/
-.eggs/
-
-# CV and cover letter (personal documents)
-Yue_Zhan_CV_RevolutionMedicines.docx
-Yue_Zhan_CoverLetter_RevolutionMedicines.docx
-generate_cv.py
-generate_cover_letter.py
-
-# Word temp lock files
-~$*
-
-# Claude Code settings
-.claude/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# OS
+# OS / editor junk
 .DS_Store
 Thumbs.db
-
-# IDE
 .vscode/
 .idea/
+~$*

@@ -1,0 +1,6 @@
+dataset,cells_start,cells_after_qc,n_doublets_removed,cells_final,pct_retained,output
+GSE132257,18409,15697,55,15642,85.0,processed_data/GSE132257_preprocessed.h5ad
+GSE132465,63689,54545,58,54487,85.6,processed_data/GSE132465_preprocessed.h5ad
+GSE125527,84129,72193,327,71866,85.4,processed_data/GSE125527_preprocessed.h5ad
+GSE150115,32000,2175,37,2138,6.7,processed_data/GSE150115_preprocessed.h5ad
+cellxgene,47107,9003,0,9003,19.1,processed_data/cellxgene_preprocessed.h5ad

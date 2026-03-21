@@ -1,0 +1,11 @@
+cellass_type,Cell_Count,Proportion_pct
+CD4 T,40325,26.33
+Epithelial,28703,18.74
+CD8 T,17974,11.74
+Plasma,16368,10.69
+B cell,15069,9.84
+NK,13712,8.95
+Myeloid,13448,8.78
+Treg,5534,3.61
+Stromal,1718,1.12
+Mast,285,0.19

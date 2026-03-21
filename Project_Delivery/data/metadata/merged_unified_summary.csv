@@ -1,0 +1,2 @@
+total_cells,total_genes,n_batches,n_diseases,n_cell_types,n_cell_types_unique,sparsity_pct,file_size_mb,median_genes_per_cell,median_umi_per_cell,median_mt_pct,n_mt_genes,CRC_cells,UC_cells
+153136,9008,5,2,79132,16,86.86605184808387,649.9518909454346,998.0,2709.0,5.344892978668213,13,79132,74004

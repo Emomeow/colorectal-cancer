@@ -1,0 +1,191 @@
+subtype,gene,logFC,padj,source
+TAM,FTH1,2.725,0.0,curated
+TAM,CTSB,5.617,0.0,curated
+TAM,SOD2,4.869,0.0,curated
+TAM,HMOX1,,,curated
+TAM,LGALS3,,,curated
+TAM,CD68,5.333,0.0,curated
+TAM,HLA-DRA,6.803,0.0,curated
+TAM,FCGR1A,,,curated
+TAM,RGS1,,,curated
+TAM,SOCS3,,,curated
+Inflam_Mac,IL1B,,,curated
+Inflam_Mac,TNF,,,curated
+Inflam_Mac,G0S2,,,curated
+Inflam_Mac,PTGS2,,,curated
+Inflam_Mac,NFKBIA,,,curated
+Inflam_Mac,VEGFA,,,curated
+Inflam_Mac,FCER1G,6.019,0.0,computed
+Inflam_Mac,FTH1,3.235,0.0,computed
+Inflam_Mac,TYROBP,5.787,0.0,computed
+Inflam_Mac,FTL,3.073,0.0,computed
+Classical_Mono,S100A8,9.0,0.0,curated
+Classical_Mono,S100A9,8.458,0.0,curated
+Classical_Mono,FCN1,7.875,0.0,curated
+Classical_Mono,LYZ,7.093,0.0,curated
+Classical_Mono,CST3,4.131,0.0,curated
+Classical_Mono,VCAN,6.877,0.0,curated
+Classical_Mono,CD14,5.815,0.0,curated
+Classical_Mono,TYROBP,6.38,0.0,curated
+Classical_Mono,CTSS,3.997,0.0,curated
+Classical_Mono,MNDA,,,curated
+cDC2,FCER1A,,,curated
+cDC2,CD1C,,,curated
+cDC2,CLEC10A,8.212,0.0,curated
+cDC2,CD86,,,curated
+cDC2,HLA-DQA1,,,curated
+cDC2,SPI1,4.592,0.0,curated
+cDC2,CD74,5.301,0.0,computed
+cDC2,CST3,5.396,0.0,computed
+cDC2,LYZ,6.096,0.0,computed
+cDC2,AIF1,5.08,0.0,computed
+pDC,IRF7,5.335,4.6576467182820194e-275,curated
+pDC,TCF4,5.18,3.401643135953256e-239,curated
+pDC,PLD4,7.51,2.852579825132197e-225,curated
+pDC,PLAC8,4.834,1.1086864944177074e-265,curated
+pDC,IRF8,5.191,7.11491334319697e-237,curated
+pDC,GZMB,6.572,2.602180919303828e-283,curated
+pDC,TSPAN13,4.542,7.747724292748174e-200,curated
+pDC,ITM2C,3.42,3.11320879315044e-189,curated
+pDC,SEC61B,3.332,3.4713855152080157e-276,computed
+pDC,CD74,4.644,3.9942456600805023e-253,computed
+CD8_Tex,HAVCR2,,,curated
+CD8_Tex,ENTPD1,,,curated
+CD8_Tex,PDCD1,,,curated
+CD8_Tex,TIGIT,,,curated
+CD8_Tex,LAG3,,,curated
+CD8_Tex,CTLA4,,,curated
+CD8_Tex,TOX,,,curated
+CD8_Tex,CREM,4.108,0.0,curated
+CD8_Tex,HOPX,3.589,0.0,curated
+CD8_Tex,CCL5,5.673,0.0,computed
+CD8_Tpex,TCF7,,,curated
+CD8_Tpex,CCR7,,,curated
+CD8_Tpex,SELL,,,curated
+CD8_Tpex,IL7R,3.366,0.0,curated
+CD8_Tpex,LTB,,,curated
+CD8_Tpex,TOX2,,,curated
+CD8_Tpex,CXCR5,,,curated
+CD8_Tpex,BCL6,,,curated
+CD8_Tpex,SLAMF6,,,curated
+CD8_Tpex,JUNB,1.652,0.0,curated
+CD8_Teff,GZMB,,,curated
+CD8_Teff,PRF1,,,curated
+CD8_Teff,IFNG,,,curated
+CD8_Teff,NKG7,4.543,0.0,curated
+CD8_Teff,CCL4,2.674,0.0,curated
+CD8_Teff,FGFBP2,,,curated
+CD8_Teff,CX3CR1,,,curated
+CD8_Teff,TBX21,,,curated
+CD8_Teff,KLRG1,,,curated
+CD8_Teff,GZMA,3.987,0.0,curated
+CD4_Tconv,IL7R,3.502,0.0,curated
+CD4_Tconv,LTB,3.131,0.0,curated
+CD4_Tconv,MAL,,,curated
+CD4_Tconv,LDHB,2.237,0.0,curated
+CD4_Tconv,CCR7,,,curated
+CD4_Tconv,NOSIP,,,curated
+CD4_Tconv,TCF7,,,curated
+CD4_Tconv,AQP3,,,curated
+CD4_Tconv,EEF1A1,1.451,0.0,computed
+CD4_Tconv,RPS3A,1.343,0.0,computed
+Treg,FOXP3,,,curated
+Treg,IL2RA,,,curated
+Treg,CTLA4,4.453,0.0,curated
+Treg,TIGIT,3.876,0.0,curated
+Treg,IKZF2,,,curated
+Treg,RTKN2,,,curated
+Treg,BATF,4.38,0.0,curated
+Treg,DUSP4,2.973,0.0,curated
+Treg,IL32,2.828,0.0,computed
+Treg,CD3D,2.987,0.0,computed
+Th17,CCR6,,,curated
+Th17,RORA,2.683,0.0,curated
+Th17,CAPG,,,curated
+Th17,FURIN,,,curated
+Th17,KLRB1,3.84,0.0,curated
+Th17,SRGN,2.605,0.0,computed
+Th17,TNFAIP3,2.828,0.0,computed
+Th17,CD3D,2.877,0.0,computed
+Th17,IL7R,3.136,0.0,computed
+Th17,BTG1,1.787,0.0,computed
+Tfh,CXCR5,,,curated
+Tfh,BCL6,,,curated
+Tfh,ICOS,,,curated
+Tfh,PDCD1,,,curated
+Tfh,TOX2,,,curated
+Tfh,CD200,,,curated
+Tfh,BTLA,,,curated
+Tfh,MAF,,,curated
+Tfh,SH2D1A,,,curated
+Tfh,RPS3A,1.4,0.0,computed
+gdT,TRDC,,,curated
+gdT,TRGC2,,,curated
+gdT,GNLY,,,curated
+gdT,KLRB1,,,curated
+gdT,NKG7,,,curated
+gdT,FCGR3A,,,curated
+gdT,GZMB,,,curated
+gdT,CXCR6,,,curated
+gdT,B2M,1.605,0.0,computed
+gdT,TRAC,3.856,0.0,computed
+NK cells,GNLY,7.839,0.0,curated
+NK cells,NKG7,6.517,0.0,curated
+NK cells,KLRB1,3.19,0.0,curated
+NK cells,NCAM1,,,curated
+NK cells,FCGR3A,4.593,0.0,curated
+NK cells,TYROBP,4.195,0.0,curated
+NK cells,FGFBP2,7.126,0.0,curated
+NK cells,PRF1,5.382,0.0,curated
+NK cells,KLRD1,5.098,0.0,curated
+NK cells,CST7,4.768,0.0,computed
+B cells,MS4A1,6.87,0.0,curated
+B cells,CD79A,7.813,0.0,curated
+B cells,CD79B,4.217,0.0,curated
+B cells,IGHM,3.955,0.0,curated
+B cells,IGHD,,,curated
+B cells,BANK1,6.384,0.0,curated
+B cells,RALGPS2,,,curated
+B cells,FCRL1,,,curated
+B cells,CD22,,,curated
+B cells,PAX5,,,curated
+Mast cells,SRGN,3.569,8.36024887884307e-194,curated
+Mast cells,CD63,3.253,3.2153159015421003e-186,curated
+Mast cells,ANXA1,4.222,3.503455290276946e-184,curated
+Mast cells,FCER1G,4.171,1.0664819880145398e-137,curated
+Mast cells,ALOX5AP,3.373,1.5021427575663851e-108,curated
+Mast cells,LAPTM4A,3.228,1.2797437844147935e-137,curated
+Mast cells,CD9,3.416,3.2361889992768423e-135,curated
+Mast cells,SAMSN1,3.674,2.385049785752452e-126,curated
+Mast cells,TYROBP,3.31,2.4904291017989017e-96,curated
+Mast cells,FTH1,2.345,4.798439645616105e-171,computed
+Stromal,IGFBP7,9.064,0.0,curated
+Stromal,LGALS1,4.742,0.0,curated
+Stromal,COL6A2,8.143,0.0,curated
+Stromal,GSN,4.955,0.0,curated
+Stromal,TIMP1,3.804,0.0,curated
+Stromal,IGFBP4,5.149,0.0,curated
+Stromal,VIM,3.325,0.0,curated
+Stromal,IFITM3,4.444,0.0,curated
+Stromal,HSPB1,3.288,0.0,curated
+Stromal,CD63,3.111,0.0,computed
+Epithelial,KRT18,5.34,0.0,curated
+Epithelial,S100A6,3.344,0.0,curated
+Epithelial,ATP1B1,3.712,0.0,curated
+Epithelial,TPM1,3.702,0.0,curated
+Epithelial,SPINT2,3.312,0.0,curated
+Epithelial,KLF5,3.68,0.0,curated
+Epithelial,MGST1,4.044,0.0,curated
+Epithelial,PERP,3.262,0.0,curated
+Epithelial,CYSTM1,3.125,0.0,curated
+Epithelial,LGALS3,3.624,0.0,computed
+Malignant,KRT18,3.778,0.0,curated
+Malignant,SOX4,3.493,0.0,curated
+Malignant,GNAS,2.334,0.0,curated
+Malignant,LGALS3,2.574,0.0,curated
+Malignant,TXN,2.244,0.0,curated
+Malignant,PERP,2.753,0.0,curated
+Malignant,KLF5,2.691,0.0,curated
+Malignant,LLGL2,2.724,0.0,curated
+Malignant,PLCG2,3.689,0.0,curated
+Malignant,SLC12A2,3.001,0.0,curated

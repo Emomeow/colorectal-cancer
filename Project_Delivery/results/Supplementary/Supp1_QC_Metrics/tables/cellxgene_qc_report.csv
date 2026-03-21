@@ -1,0 +1,2 @@
+dataset,n_cells_before,n_genes,n_mt_genes,median_genes_per_cell,median_counts_per_cell,median_mt_pct,suggested_min_genes,suggested_max_genes,suggested_min_counts,suggested_max_mt,n_cells_to_filter,pct_cells_to_filter
+cellxgene,47107,25339,13,3192.0,14104.0,18.112417,200,8217.0,500,20,20162,42.80043305665825

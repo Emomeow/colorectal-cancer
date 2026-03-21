@@ -1,0 +1,2 @@
+dataset,n_cells_before,n_genes,n_mt_genes,median_genes_per_cell,median_counts_per_cell,median_mt_pct,suggested_min_genes,suggested_max_genes,suggested_min_counts,suggested_max_mt,n_cells_to_filter,pct_cells_to_filter
+GSE125527,84129,10160,13,796.0,1858.0,6.7870035,200,1483.0,500,20,8814,10.476767820846558

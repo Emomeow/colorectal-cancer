@@ -1,0 +1,18 @@
+unified_cell_type,GSE132257,GSE132465,GSE125527,GSE150115,cellxgene
+B cells,3983,8761,0,0,0
+BEST4+ colonocyte,0,0,0,0,80
+Epithelial cells,2867,11476,0,0,0
+Mast cells,221,161,0,0,0
+Myeloids,1103,6268,0,0,0
+Stromal cells,845,5372,0,0,0
+T cells,6500,22449,0,0,0
+Unknown,0,0,71866,2138,0
+Unspecified,123,0,0,0,0
+colon goblet cell,0,0,0,0,221
+colonocyte,0,0,0,0,226
+early colonocyte,0,0,0,0,396
+enteroendocrine cell of colon,0,0,0,0,54
+intestinal crypt stem cell of colon,0,0,0,0,303
+malignant cell,0,0,0,0,7233
+secretory cell,0,0,0,0,292
+tuft cell of colon,0,0,0,0,198

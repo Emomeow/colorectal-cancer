@@ -1,0 +1,13 @@
+Metric,Category,scVI,Harmony,PCA_unintegrated
+iLISI,Batch,0.0136,0.0869,0.0
+kBET,Batch,0.1002,0.3273,0.0627
+Graph connectivity,Batch,0.8653,0.8495,0.8388
+PCR comparison,Batch,0.8424,0.432,0.0
+cLISI,Bio,0.9947,0.9943,0.9953
+Silhouette label,Bio,0.5098,0.5567,0.5538
+KMeans NMI,Bio,0.6388,0.6114,0.6518
+KMeans ARI,Bio,0.4776,0.4233,0.442
+Isolated labels,Bio,0.5806,0.5677,0.5844
+Bio conservation (aggregate),—,0.64,0.631,0.645
+Batch correction (aggregate),—,0.455,0.424,0.225
+Total,—,0.566,0.548,0.477

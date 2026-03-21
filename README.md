@@ -1,227 +1,176 @@
-# CRC/UC 单细胞 RNA-seq 整合分析
+# Colorectal Cancer Immune Microenvironment — Single-Cell RNA-seq Analysis
 
-**项目**：跨疾病阶段 CRC 免疫微环境全景图谱（scVI 整合）  
-**数据**：5 个训练数据集 + 1 个外部验证集，共 ~240k 细胞  
-**疾病**：结直肠癌（CRC）/ 溃疡性结肠炎（UC）
-
----
-
-## 数据集
-
-| 数据集 | 疾病 | 细胞数 | 来源 | 角色 |
-|--------|------|--------|------|------|
-| GSE132257 | CRC | 18,409 | GEO | 训练 |
-| GSE132465 | CRC | 63,689 | GEO | 训练 |
-| cellxgene | CRC | 26,945 | CellxGene | 训练（仅含恶性细胞+上皮亚型，含转移灶，**无免疫细胞**）|
-| GSE125527 | UC  | 84,129 | GEO | 训练 |
-| GSE150115 | UC  | 3,677  | GEO | 训练 |
-| GSE146771 | CRC | 43,817 | GEO | **外部验证**（免疫细胞，TPM格式）|
-
-训练集合并：**196,849 细胞 × 9,009 基因**
+**Project**: Three-phase scRNA-seq study of immune resistance mechanisms in microsatellite-stable (MMRp) colorectal cancer (CRC) versus ulcerative colitis (UC)
+**Author**: Yue Zhan, University of Nebraska Medical Center
+**Date**: 2026-03-15
 
 ---
 
-## 分析流程
+## Overview
+
+This project integrates five multi-institutional scRNA-seq cohorts to characterize the tumor microenvironment (TME) in CRC and UC, identify suppressive "pre-driver" immune populations driving MMRp immune resistance, and build a patient-level immune classifier using attention-based multiple instance learning (MIL).
+
+| Phase | Focus | Key Method |
+|-------|-------|------------|
+| Phase 1 | Multi-cohort integration & cell type annotation | scVI / scANVI / CellAssign |
+| Phase 2 | TME characterization & differentiation trajectory | Differential abundance / Palantir / decoupleR |
+| Phase 3 | Patient-level MMRp/d stratification | Gated Attention-MIL (ABMIL) |
+
+---
+
+## Datasets
+
+| Dataset | Disease | Cells (raw) | Cells (after QC) | Source |
+|---------|---------|-------------|------------------|--------|
+| GSE132465 | CRC | 63,689 | 54,487 | GEO |
+| GSE132257 | CRC | 18,409 | 15,642 | GEO |
+| cellxgene | CRC | 47,107 | 9,003 | CellxGene |
+| GSE125527 | UC | 84,129 | 71,866 | GEO |
+| GSE150115 | UC | 32,000 | 2,138 | GEO |
+| **Total** | CRC + UC | **245,334** | **153,136** | |
+| GSE178341 | CRC (MIL training) | 94,196 immune cells | — | GEO |
+| GSE132465 (SMC) | CRC (MIL validation) | 63,689 | — | GEO |
+
+QC filters: mitochondrial gene fraction ≤ 10%, Scrublet doublet removal. GSE150115 additionally required ≥ 500 genes and ≥ 1,000 UMIs.
+
+---
+
+## Phase 1 — Data Integration & Cell Type Annotation
+
+**Goal**: Integrate five heterogeneous cohorts into a harmonized single-cell atlas while preserving biological variation.
+
+**Methods**:
+- Batch-aware HVG selection (3,000 genes)
+- **scVI** (n_latent=30, n_layers=2, batch_key=`batch`, disease covariate) trained with early stopping (patience=50, ~96 epochs)
+- **scANVI** semi-supervised refinement (labels_key=`cellass_type`, max_epochs=50)
+- Integration quality assessed via **iLISI / cLISI** (k=90): scANVI achieved cLISI=1.21 vs scVI 1.33, confirming superior cell-type separation
+- **CellAssign** probabilistic marker-driven annotation of 10 immune and stromal lineages
+
+**Cell type composition** (153,136 cells):
+
+| Cell Type | Count | % |
+|-----------|-------|---|
+| T cells | 77,927 | 50.9% |
+| B cells | 36,987 | 24.2% |
+| Epithelial | 9,003 | 5.9% |
+| Myeloid | 15,972 | 10.4% |
+| NK cells | 7,224 | 4.7% |
+| Others | 6,023 | 3.9% |
+
+---
+
+## Phase 2 — TME Characterization & Trajectory Analysis
+
+**Goal**: Identify CRC-specific suppressive immune subpopulations and reconstruct their differentiation trajectory.
+
+**Methods**:
+- Fine annotation of T cells and myeloid cells using Leiden clustering, marker gene scoring, and KNN label transfer
+- **Differential abundance**: per-patient subtype proportions, Mann-Whitney U test + BH FDR correction (CRC n=25 vs UC n=19)
+- **Batch-corrected DEG**: scVI counterfactual batch marginalization (transform across all 5 batches) + Wilcoxon / BH FDR
+- **Palantir** pseudotime: Classical Monocyte → TAM differentiation trajectory
+- **TF regulon analysis**: decoupleR activity scores along pseudotime; identified core TFs driving suppressive TAM fate
+
+**Key findings**:
+
+| Subtype | CRC enrichment | FDR |
+|---------|---------------|-----|
+| TAM | **75.5×** (log2FC = +5.68) | 4.1×10⁻⁷ |
+| CD8_Tex | **13.8×** (log2FC = +3.87) | 9.4×10⁻⁶ |
+| CD8_Tpex | 0.05× — UC-enriched (log2FC = −4.16) | 0.022 |
+
+TAM and CD8_Tex are established as the dominant **Pre-driver suppressive populations** in CRC. The CRC Tex/Tpex ratio = 12.8 vs UC = 0.04, indicating a deeply exhausted rather than stem-like T cell state in CRC.
+
+---
+
+## Phase 3 — Attention-MIL for Patient Stratification
+
+**Goal**: Classify MMRp vs MMRd patients from single-cell immune profiles and identify the immune populations most predictive of mismatch repair status.
+
+**Methods**:
+- **Gated Attention-MIL (ABMIL)** in PyTorch: encoder (Linear 50→256→256) + gated attention + classification head
+- Training: GSE178341, 62 patients (MMRd=34, MMRp=28), 94,196 immune cells; features = PCA top 50 dims of 2,000 HVGs
+- 5-fold stratified cross-validation, AdamW optimizer, BCE loss, early stopping (patience=20)
+- **Cross-dataset transfer**: retrained on 766 shared HVGs between GSE178341 and GSE132465; PCA projection applied to validation cohort
+- **Augur-like predictability**: per-cell-type random forest AUC scores to rank immune populations by MMRp/d discriminability
+- Paired tumor vs normal tissue validation (n=10 pairs, TCD8 exhaustion signature, paired Wilcoxon test)
+- **Hyperparameter robustness**: one-at-a-time sweep across 6 parameters (n_PCA, hidden dim, attention dim, max cells, dropout, LR)
+
+**Results**:
+
+| Metric | Value |
+|--------|-------|
+| Out-of-fold AUC | **0.909** |
+| Out-of-fold AUPRC | **0.922** |
+| Fold AUCs | 1.000 / 0.929 / 1.000 / 1.000 / 0.829 |
+
+---
+
+## Repository Structure
 
 ```
-raw data (data/)
-    │
-    ├─ convert_*.py          # Step 1: 各数据集转为 h5ad 格式
-    │
-    ├─ qc_cellxgene.py       # Step 2: 质量控制（各数据集 QC）
-    ├─ filter_gse150115.py   #         GSE150115 特殊过滤
-    │
-    ├─ remerge_with_unified_annotations.py  # Step 3: 合并5数据集 → merged_5datasets_unified.h5ad（已弃用）
-    ├─ rebuild_annotations.py               #         重建细胞类型注释
-    │
-    ├─ train_scvi_optimized.py  # Step 4: scVI 批次校正训练
-    │                           #   → scvi_model_optimized/  (trained model)
-    │                           #   → merged_annotated.h5ad  (主数据集)
-    │
-    ├─ annotate_subclusters.py  # Step 5: KNN 反向注释免疫亚群
-    │                           #   以 GSE146771 Sub_Cluster 为参考
-    │                           #   → annotation_results/
-    │
-    ├─ validate_external.py     # Step 6: 外部验证（GSE146771 投影）
-    │
-    ├─ retrain_scvi_6datasets.py  # Step 7: 6数据集 UMAP（GSE146771投影）
-    │                              #   → scvi_results_6datasets/merged_6datasets_integrated.h5ad
-    │
-    └─ figure1_panel_*.py       # Step 8: Figure 1 各面板生成
-                                #   → figures/phase1/
+Project_Delivery/
+├── data/
+│   └── metadata/                        # Batch statistics, cell type counts (CSV)
+│       ├── merged_unified_batch_stats.csv
+│       ├── merged_unified_celltype_by_batch.csv
+│       ├── merged_unified_summary.csv
+│       └── preprocessing_summary.csv
+│
+├── results/
+│   ├── Figure1_scVI_Atlas/
+│   │   ├── scVI_Integration/            # UMAP figures (panel A/B), integration tables
+│   │   ├── Cell_Composition/            # Cell type composition (panel C)
+│   │   ├── Marker_Expression/           # Marker dotplot (panel D)
+│   │   ├── Cluster_Stability/           # LISI / bootstrap AMI (panel E/F)
+│   │   ├── figure1_landscape.png/pdf    # Full Figure 1 assembly
+│   │   └── script/                      # Phase 1 analysis scripts
+│   │
+│   ├── Figure2_Pre_driver_Trajectory/
+│   │   ├── Trajectory_Analysis/         # UMAP subtypes, pseudotime, gene expression
+│   │   ├── Spatial_Distribution/        # Abundance strip plots, dotplots
+│   │   ├── SCENIC_Regulon/              # TF heatmaps, pseudotime correlations
+│   │   └── script/                      # Phase 2 analysis scripts
+│   │
+│   ├── Figure3_MIL_MMR_Prediction/
+│   │   ├── Model_Performance/           # ROC / PR curves, fold AUCs
+│   │   ├── Attention_Analysis/          # Attention score UMAP, per-subtype scores
+│   │   ├── Cross_Dataset_Validation/    # GSE132465 transfer results
+│   │   └── script/                      # Phase 3 analysis scripts
+│   │
+│   └── Supplementary/
+│       ├── Supp2_Extended_Markers/      # Extended marker dotplots
+│       └── Supp3_MIL_Robustness/        # Hyperparameter sweep results
+│
+├── script/                              # All analysis scripts (master copy)
+├── report_phase1.pdf                    # Phase 1 full report
+├── report_phase2.pdf                    # Phase 2 full report
+└── report_phase3.pdf                    # Phase 3 full report
 ```
 
----
-
-## 目录结构
-
-```
-changdao/
-│
-├── data/                          # 原始数据（只读）
-│   ├── GSE132257_*.txt.gz
-│   ├── GSE132465_*.txt.gz
-│   ├── GSE125527_extracted/       # 解压的 UMI 表格
-│   ├── GSE150115_extracted/
-│   ├── GSE146771_*.txt.gz         # 外部验证（TPM格式）
-│   └── cellxgene.h5ad
-│
-├── processed_data/                # 预处理后的数据
-│   ├── GSE132257.h5ad             # 各数据集转换结果
-│   ├── GSE132465.h5ad
-│   ├── GSE125527.h5ad
-│   ├── GSE150115.h5ad
-│   ├── cellxgene_raw.h5ad
-│   ├── GSE146771_tpm.h5ad         # 外部验证集（log1p TPM）
-│   └── merged_annotated.h5ad      # ★ 主数据集（196,849 cells × 9,009 genes）
-│                                  #   obsm: X_scvi (30-dim), X_umap (2-dim)
-│                                  #   obs: batch, disease, unified_cell_type,
-│                                  #        cell_type_grouped, unified_cell_subtype,
-│                                  #        subcluster, subcluster_conf
-│
-├── scvi_model_optimized/          # ★ 训练好的 scVI 模型
-│   └── model.pt                   #   架构: 9009 genes → 2 layers → 30 latent dims
-│                                  #   训练参数: lr=1e-3, batch_size=256, early_stop
-│
-├── scvi_results_6datasets/        # 6数据集整合结果
-│   └── merged_6datasets_integrated.h5ad  # 240,666 cells (5训练+GSE146771投影)
-│                                          # obsm: X_scvi, X_umap
-│
-├── qc_results/                    # QC 报告图（各数据集）
-├── annotation_results/            # 免疫亚群注释结果
-│   ├── umap_subclusters.png
-│   ├── subcluster_assignments.csv
-│   └── consistency_heatmap.png
-├── validation_results/            # 外部验证结果
-│
-├── figures/
-│   └── phase1/                    # Figure 1 所有面板（PNG + PDF）
-│       ├── figure1_panelA_batch.*         # UMAP 按数据集着色
-│       ├── figure1_panelB_disease.*       # UMAP 按疾病着色（CRC/UC）
-│       ├── figure1_panel_C_composition.*  # 细胞类型组成堆叠柱状图
-│       ├── figure1_panel_D_dotplot.*      # Marker 基因 dotplot
-│       └── figure1_panel_E_lisi.*         # LISI 整合质量评估
-│
-├── convert_gse132257.py           # 数据转换脚本（各数据集一个）
-├── convert_gse132465.py
-├── convert_gse125527_correct.py
-├── convert_gse150115.py
-├── convert_cellxgene.py
-├── convert_gse146771.py
-├── filter_gse150115.py            # GSE150115 质量过滤
-├── qc_cellxgene.py                # CellxGene QC
-├── remerge_with_unified_annotations.py  # 数据合并与注释统一
-├── rebuild_annotations.py         # 注释重建
-├── train_scvi_optimized.py        # scVI 训练（推荐入口）
-├── retrain_scvi_6datasets.py      # 6数据集 UMAP 生成
-├── annotate_subclusters.py        # 免疫亚群 KNN 注释
-├── validate_external.py           # 外部验证
-├── figure1_panel_C.py             # Figure 1C 生成脚本
-├── figure1_panel_D.py             # Figure 1D 生成脚本
-├── figure1_panel_E.py             # Figure 1E 生成脚本
-└── requirements.txt               # Python 依赖
-```
+> **Note**: Processed `.h5ad` data files (3.2 GB total) are excluded from this repository. Raw data is available from GEO (accessions listed above) and CellxGene.
 
 ---
 
-## 主数据集说明（merged_annotated.h5ad）
+## Environment
 
-| 字段 | 说明 |
-|------|------|
-| `obs['batch']` | 数据集来源：GSE132257 / GSE132465 / GSE125527 / GSE150115 / cellxgene |
-| `obs['disease']` | CRC 或 UC |
-| `obs['unified_cell_type']` | 细粒度细胞类型（17类，含上皮亚型）|
-| `obs['cell_type_grouped']` | 粗粒度分组（9类：T cells / NK / B / Myeloids / Mast / Epithelial / Stromal / Malignant / Unknown）|
-| `obs['subcluster']` | 免疫细胞亚群（以 GSE146771 38个亚群为参考，KNN预测）|
-| `obs['subcluster_conf']` | KNN 预测置信度（仅免疫细胞有值）|
-| `obsm['X_scvi']` | scVI 30维 latent embedding（批次校正后）|
-| `obsm['X_umap']` | UMAP 2维坐标 |
-
-### 细胞类型组成
-
-| 类型 | 细胞数 | 比例 |
-|------|--------|------|
-| T cells | 77,927 | 39.6% |
-| B cells | 36,987 | 18.8% |
-| Epithelial | 33,806 | 17.2% |
-| Malignant | 16,664 | 8.5% |
-| Myeloids | 15,972 | 8.1% |
-| Stromal | 7,224 | 3.7% |
-| NK cells | 7,224 | 3.7% |
-| Unknown | 570 | 0.3% |
-| Mast cells | 475 | 0.2% |
-
----
-
-## scVI 模型参数
-
-| 参数 | 值 |
-|------|----|
-| 基因数 | 9,009 |
-| 隐层数 | 2 |
-| 潜在维度 | 30 |
-| 基因似然 | Negative Binomial |
-| batch_key | `batch`（5个数据集）|
-| covariate | `disease`（CRC/UC）|
-| 学习率 | 1e-3 |
-| Batch Size | 256 |
-| Early stopping | patience=15 |
-| 实际训练轮数 | ~35 轮（早停）|
-
-> **注意**：GSE146771 不参与模型训练，仅通过 encoder 投影到 latent space 作为外部验证。
-
----
-
-## Figure 1 面板
-
-| 面板 | 文件 | 内容 | 数据来源 |
-|------|------|------|----------|
-| A | figure1_panelA_batch.* | UMAP（6数据集，含GSE146771） | merged_6datasets_integrated.h5ad |
-| B | figure1_panelB_disease.* | UMAP（CRC vs UC） | merged_6datasets_integrated.h5ad |
-| C | figure1_panel_C_composition.* | 细胞类型组成堆叠柱状图 | merged_annotated.h5ad |
-| D | figure1_panel_D_dotplot.* | Marker 基因 dotplot（44基因×17类型）| merged_annotated.h5ad |
-| E | figure1_panel_E_lisi.* | LISI 评分（scVI vs Harmony vs PCA）| merged_annotated.h5ad |
-
----
-
-## 运行环境
+Python 3.12 with the following key packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-主要依赖：`scanpy`, `scvi-tools`, `harmonypy`, `scib-metrics`, `matplotlib`, `seaborn`, `scikit-learn`
-
-Python 3.12，建议使用 venv（项目已有 `venv/` 目录）。
+| Package | Version |
+|---------|---------|
+| scvi-tools | 1.4.1 |
+| scanpy | ≥1.9 |
+| palantir | ≥1.3 |
+| decoupler | ≥1.4 |
+| torch | ≥2.0 |
+| scikit-learn | ≥1.3 |
 
 ---
 
-## 运行顺序（重建流程）
+## Citation / Contact
 
-```bash
-# 1. 数据转换（各数据集）
-python convert_gse132257.py
-python convert_gse132465.py
-python convert_gse125527_correct.py
-python convert_gse150115.py && python filter_gse150115.py
-python convert_cellxgene.py
-python convert_gse146771.py
-
-# 2. 合并与注释
-python remerge_with_unified_annotations.py
-python rebuild_annotations.py
-
-# 3. scVI 训练（~20分钟）
-python train_scvi_optimized.py
-
-# 4. 免疫亚群注释
-python annotate_subclusters.py
-
-# 5. 6数据集 UMAP（含外部验证投影）
-python retrain_scvi_6datasets.py
-
-# 6. Figure 1 生成
-python figure1_panel_C.py
-python figure1_panel_D.py
-python figure1_panel_E.py   # ~15分钟（含 PCA/Harmony 计算）
-```
+Yue Zhan — yzhan@unmc.edu
+University of Nebraska Medical Center, Department of Biostatistics
