@@ -1,7 +1,6 @@
 # Colorectal Cancer Immune Microenvironment — Single-Cell RNA-seq Analysis
 
 **Project**: Three-phase scRNA-seq study of immune resistance mechanisms in microsatellite-stable (MMRp) colorectal cancer (CRC) versus ulcerative colitis (UC)
-**Author**: Yue Zhan, University of Nebraska Medical Center
 **Date**: 2026-03-15
 
 ---
