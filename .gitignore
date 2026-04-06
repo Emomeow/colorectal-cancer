@@ -10,6 +10,9 @@ Project_Delivery/data/processed_data/*.h5ad
 Project_Delivery/data/processed_data/*.h5
 Project_Delivery/data/processed_data/*.hdf5
 
+# Exclude PDF reports (Chinese content, replaced by README)
+Project_Delivery/report_phase*.pdf
+
 # Un-ignore README and gitignore themselves
 !README.md
 !.gitignore
