@@ -1,4 +1,3 @@
----
 # OLR1+ Lipid-Associated TAMs Drive Immune Exclusion in MMRp Colorectal Cancer
 ### A Multi-Phase Single-Cell RNA-seq Study of the Colorectal Cancer Immune Microenvironment
 
