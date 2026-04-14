@@ -1,8 +1,9 @@
 """
 Phase 5 — Figure 6: TCGA-COAD Bulk Deconvolution + Clinical Validation
-Panel A: OLR1+ TAM signature score barcode heatmap (TCGA tumor samples)
+Panel A: OLR1+ TAM deconvolution by sidedness (dtangle violin + barcode)
 Panel B: Kaplan-Meier OS curve — Right-sided vs Left-sided CRC
-Panel C: Multivariable Cox regression Forest Plot
+Panel C: Kaplan-Meier OS curve — High vs Low OLR1+ TAM proportion (dtangle median split)
+Panel D: Multivariable Cox regression Forest Plot
 """
 import warnings; warnings.filterwarnings("ignore")
 import io, sys, pathlib, gzip
@@ -196,9 +197,9 @@ cph.summary.to_csv(OUT / 'cox_results.csv')
 # ════════════════════════════════════════════════════════════════
 # Figure 6
 # ════════════════════════════════════════════════════════════════
-fig = plt.figure(figsize=(18, 7.5))
-gs  = gridspec.GridSpec(1, 3, figure=fig, wspace=0.45,
-                         left=0.07, right=0.97, top=0.87, bottom=0.14)
+fig = plt.figure(figsize=(24, 7.5))
+gs  = gridspec.GridSpec(1, 4, figure=fig, wspace=0.42,
+                         left=0.06, right=0.97, top=0.87, bottom=0.14)
 
 C_HIGH = '#E74C3C'
 C_LOW  = '#3498DB'
@@ -326,8 +327,73 @@ ax_b.legend(fontsize=8, frameon=True, framealpha=0.9,
             loc='upper right', bbox_to_anchor=(1.0, 0.92))
 ax_b.set_ylim(-0.05, 1.12)
 
-# ── Panel C: Forest Plot (Cox) ────────────────────────────────
+# ── Panel C: KM — dtangle OLR1+ TAM High vs Low ─────────────
 ax_c = fig.add_subplot(gs[0, 2])
+
+dt_km_file = pathlib.Path('phase5_results/dtangle_with_clinical.csv')
+if dt_km_file.exists():
+    dt_km = pd.read_csv(dt_km_file)
+    # OS columns from the R merge
+    dt_km = dt_km.dropna(subset=['SPP1+B', 'OS', 'OS.time']).copy()
+    dt_km['OS']      = pd.to_numeric(dt_km['OS'],      errors='coerce')
+    dt_km['OS.time'] = pd.to_numeric(dt_km['OS.time'], errors='coerce')
+    dt_km = dt_km.dropna(subset=['OS', 'OS.time']).copy()
+
+    median_prop = dt_km['SPP1+B'].median()
+    dt_km['dtangle_group'] = np.where(dt_km['SPP1+B'] >= median_prop, 'High', 'Low')
+    dt_high = dt_km[dt_km['dtangle_group'] == 'High']
+    dt_low  = dt_km[dt_km['dtangle_group'] == 'Low']
+    print(f"dtangle KM — High n={len(dt_high)}, Low n={len(dt_low)}, median={median_prop:.4f}")
+
+    lr_dt = logrank_test(dt_high['OS.time'], dt_low['OS.time'],
+                         event_observed_A=dt_high['OS'], event_observed_B=dt_low['OS'])
+    print(f"dtangle KM log-rank p = {lr_dt.p_value:.4f}")
+
+    kmf_dh = KaplanMeierFitter(label=f'High OLR1+ TAM % (n={len(dt_high)})')
+    kmf_dl = KaplanMeierFitter(label=f'Low OLR1+ TAM % (n={len(dt_low)})')
+    kmf_dh.fit(dt_high['OS.time'], event_observed=dt_high['OS'])
+    kmf_dl.fit(dt_low['OS.time'],  event_observed=dt_low['OS'])
+
+    kmf_dh.plot_survival_function(ax=ax_c, color=C_HIGH, ci_show=True, ci_alpha=0.15, linewidth=2.0)
+    kmf_dl.plot_survival_function(ax=ax_c, color=C_LOW,  ci_show=True, ci_alpha=0.15, linewidth=2.0)
+
+    # Median survival lines
+    for kmf_obj, col in [(kmf_dh, C_HIGH), (kmf_dl, C_LOW)]:
+        med = kmf_obj.median_survival_time_
+        if not np.isinf(med):
+            ax_c.axvline(med, ls=':', color=col, lw=1.2, alpha=0.7)
+
+    sig_dt = ('***' if lr_dt.p_value < 0.001 else '**' if lr_dt.p_value < 0.01
+              else '*' if lr_dt.p_value < 0.05 else 'n.s.')
+    ax_c.text(0.97, 0.97,
+              f'Log-rank p = {lr_dt.p_value:.4f}\n{sig_dt}',
+              transform=ax_c.transAxes, ha='right', va='top', fontsize=8.5,
+              bbox=dict(boxstyle='round', fc='white', ec='#CCCCCC', lw=0.8))
+
+    med_h_str = f'{kmf_dh.median_survival_time_:.0f} d' if not np.isinf(kmf_dh.median_survival_time_) else 'not reached'
+    med_l_str2 = f'{kmf_dl.median_survival_time_:.0f} d' if not np.isinf(kmf_dl.median_survival_time_) else 'not reached'
+    ax_c.text(0.03, 0.42,
+              f'High median OS: {med_h_str}\nLow  median OS: {med_l_str2}',
+              transform=ax_c.transAxes, ha='left', va='top', fontsize=7.5,
+              color='#444444',
+              bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='#DDDDDD',
+                        alpha=0.9, lw=0.6))
+
+    ax_c.set_xlabel('Time (days)', fontsize=9)
+    ax_c.set_ylabel('Survival probability', fontsize=9)
+    ax_c.set_title('C  Overall Survival: High vs Low OLR1+ TAM\ndtangle Deconvolution Median Split (TCGA-COAD)',
+                   fontsize=10, fontweight='bold', loc='left')
+    ax_c.spines[['top','right']].set_visible(False)
+    ax_c.legend(fontsize=8, frameon=True, framealpha=0.9,
+                loc='upper right', bbox_to_anchor=(1.0, 0.92))
+    ax_c.set_ylim(-0.05, 1.12)
+else:
+    ax_c.text(0.5, 0.5, 'dtangle_with_clinical.csv\nnot found',
+              ha='center', va='center', transform=ax_c.transAxes, fontsize=10)
+    ax_c.set_title('C  dtangle KM (data missing)', fontsize=10, fontweight='bold', loc='left')
+
+# ── Panel D: Forest Plot (Cox) ────────────────────────────────
+ax_d = fig.add_subplot(gs[0, 3])
 
 cox_sum = cph.summary.copy()
 var_labels = {
@@ -343,10 +409,8 @@ cox_sum['label'] = cox_sum.index.map(lambda x: var_labels.get(x, x))
 cox_sum = cox_sum.sort_values('exp(coef)', ascending=True)
 
 y_pos = range(len(cox_sum))
-colors_fp = [C_HIGH if row['p'] < 0.05 else '#AAAAAA'
-             for _, row in cox_sum.iterrows()]
 
-ax_c.errorbar(
+ax_d.errorbar(
     x=cox_sum['exp(coef)'],
     y=list(y_pos),
     xerr=[cox_sum['exp(coef)'] - cox_sum['exp(coef) lower 95%'],
@@ -357,32 +421,32 @@ ax_c.errorbar(
 # Color dots
 for i, (idx, row) in enumerate(cox_sum.iterrows()):
     c = C_HIGH if row['p'] < 0.05 else '#AAAAAA'
-    ax_c.scatter(row['exp(coef)'], i, color=c, s=60, zorder=4)
+    ax_d.scatter(row['exp(coef)'], i, color=c, s=60, zorder=4)
 
-ax_c.axvline(1.0, color='black', ls='--', lw=1)
-ax_c.set_yticks(list(y_pos))
-ax_c.set_yticklabels(cox_sum['label'], fontsize=9)
-ax_c.set_xlabel('Hazard Ratio (95% CI)', fontsize=9)
-ax_c.set_title('C  Multivariable Cox Regression\nIndependent Prognostic Value',
+ax_d.axvline(1.0, color='black', ls='--', lw=1)
+ax_d.set_yticks(list(y_pos))
+ax_d.set_yticklabels(cox_sum['label'], fontsize=9)
+ax_d.set_xlabel('Hazard Ratio (95% CI)', fontsize=9)
+ax_d.set_title('D  Multivariable Cox Regression\nIndependent Prognostic Value',
                fontsize=10, fontweight='bold', loc='left')
-ax_c.spines[['top','right']].set_visible(False)
+ax_d.spines[['top','right']].set_visible(False)
 
 # Set xlim wide enough for CI bars + annotation text column
 max_upper = cox_sum['exp(coef) upper 95%'].max()
-ax_c.set_xlim(0.2, max_upper * 2.8)
+ax_d.set_xlim(0.2, max_upper * 2.8)
 text_x = max_upper * 1.15
 
 # HR + p annotation in a clear text column beyond the CI bars
 for i, (idx, row) in enumerate(cox_sum.iterrows()):
     sig_str = ' *' if row['p'] < 0.05 else ''
     p_str = 'p<0.001' if row['p'] < 0.001 else f'p={row["p"]:.3f}'
-    ax_c.text(text_x, i,
+    ax_d.text(text_x, i,
               f"HR={row['exp(coef)']:.2f}, {p_str}{sig_str}",
               ha='left', va='center', fontsize=6.5)
 
 patch_sig = mpatches.Patch(color=C_HIGH, label='p < 0.05')
 patch_ns  = mpatches.Patch(color='#AAAAAA', label='n.s.')
-ax_c.legend(handles=[patch_sig, patch_ns], fontsize=7.5, frameon=True,
+ax_d.legend(handles=[patch_sig, patch_ns], fontsize=7.5, frameon=True,
             framealpha=0.9, loc='lower right')
 
 # ── Super title ───────────────────────────────────────────────

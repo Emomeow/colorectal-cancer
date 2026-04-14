@@ -259,7 +259,7 @@ do_heatmap <- function() {
     fontsize       = 10,
     fontsize_row   = 9,
     fontsize_col   = 9,
-    main = "E  Metabolic Pathway Activity (scMetabolism AUCell, KEGG 2021)\nOLR1+ TAMs vs Other Cell Types — GSE144735",
+    main = "E  Metabolic Pathway Activity (scMetabolism AUCell, KEGG 2021)\n       OLR1+ TAMs vs Other Cell Types — GSE144735",
     angle_col    = 315,
     cellwidth    = 55,
     cellheight   = 30
@@ -268,13 +268,13 @@ do_heatmap <- function() {
 
 # PNG
 png(file.path(OUT, "panelE_heatmap_scMetabolism.png"),
-    width = 8, height = 6, units = "in", res = 200, bg = "white")
+    width = 11, height = 7.5, units = "in", res = 200, bg = "white")
 do_heatmap()
 dev.off()
 
 # PDF
 cairo_pdf(file.path(OUT, "panelE_heatmap_scMetabolism.pdf"),
-          width = 8, height = 6, family = "sans")
+          width = 11, height = 7.5, family = "sans")
 do_heatmap()
 dev.off()
 cat("Panel E saved.\n")
