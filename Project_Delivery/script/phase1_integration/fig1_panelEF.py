@@ -197,7 +197,7 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.legend(fontsize=7.5, frameon=False, loc='upper left',
           handlelength=0.8, labelspacing=0.4)
-ax.text(-0.08, 1.03, 'E', transform=ax.transAxes,
+ax.text(-0.08, 1.03, 'F', transform=ax.transAxes,
         fontsize=14, fontweight='bold', va='bottom')
 ax.set_title('Integration Quality (scib-metrics)', fontsize=10, pad=4)
 ax.text(0.98, 0.02, f'n={adata.n_obs:,} cells\n10 CellAssign types',
@@ -241,7 +241,7 @@ ax.text(0.97, 0.05,
         f'n={N_BOOT} bootstrap seeds\nscVI Leiden clustering',
         transform=ax.transAxes, ha='right', va='bottom',
         fontsize=7, color='#444')
-ax.text(-0.10, 1.03, 'F', transform=ax.transAxes,
+ax.text(-0.10, 1.03, '', transform=ax.transAxes,
         fontsize=14, fontweight='bold', va='bottom')
 ax.set_title('Cluster Stability (Bootstrap AMI)', fontsize=10, pad=4)
 

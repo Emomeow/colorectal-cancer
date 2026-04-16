@@ -100,7 +100,7 @@ ax.set_ylim(-10, 110)
 ax.tick_params(labelsize=7.5)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.text(-0.07, 1.03, 'C', transform=ax.transAxes,
+ax.text(-0.07, 1.03, 'D', transform=ax.transAxes,
         fontsize=14, fontweight='bold', va='bottom')
 ax.set_title('Cell Type Composition per Dataset (CellAssign)', fontsize=10, pad=4)
 

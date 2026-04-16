@@ -115,7 +115,7 @@ ax.set_yticklabels([CT_ORDER[n_ct - 1 - i] for i in range(n_ct)], fontsize=7.5)
 ax.tick_params(labelsize=7.5)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.text(-0.14, 1.04, 'D', transform=ax.transAxes,
+ax.text(-0.14, 1.04, 'E', transform=ax.transAxes,
         fontsize=14, fontweight='bold', va='bottom')
 ax.set_title('Canonical Marker Genes (CellAssign)', fontsize=10, pad=20)
 

@@ -131,6 +131,10 @@ full_html = f"""<!DOCTYPE html>
   ul, ol {{ margin: 5pt 0; padding-left: 20pt; }}
   li {{ margin: 2pt 0; }}
   strong {{ color: #1a1a2e; }}
+  @page {{
+    margin: 15mm 12mm 15mm 12mm;
+    size: A4;
+  }}
   @media print {{
     body {{ padding: 0; }}
     h2 {{ page-break-before: auto; }}

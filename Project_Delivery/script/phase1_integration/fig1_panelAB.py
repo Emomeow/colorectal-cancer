@@ -39,7 +39,7 @@ CT_ORDER = ['CD4 T', 'CD8 T', 'Treg', 'NK',
 CT_COLORS = {
     'CD4 T':     '#E64B35', 'CD8 T':  '#4DBBD5', 'Treg':    '#00A087',
     'NK':        '#3C5488', 'B cell': '#F39B7F',  'Plasma':  '#8491B4',
-    'Myeloid':   '#91D1C2', 'Mast':   '#DC0000',  'Stromal': '#7E6148',
+    'Myeloid':   '#91D1C2', 'Mast':   '#FF7F0E',  'Stromal': '#7E6148',
     'Epithelial':'#B09C85',
 }
 

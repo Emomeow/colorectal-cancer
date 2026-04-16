@@ -27,24 +27,24 @@ os.makedirs(FIG_DIR, exist_ok=True)
 
 # ── 配色 ──────────────────────────────────────────────────────────────
 TCELL_COLORS = {
-    'CD8_Tex':    '#D62728',  # tab:red
-    'CD8_Tpex':   '#FF7F0E',  # tab:orange
-    'CD8_Teff':   '#1F77B4',  # tab:blue
-    'Treg':       '#2CA02C',  # tab:green
-    'Th17':       '#9467BD',  # tab:purple
-    'CD4_Tconv':  '#8C564B',  # tab:brown
-    'Tfh':        '#E377C2',  # tab:pink
-    'gdT':        '#17BECF',  # tab:cyan
+    'CD8_Tex':    '#E64B35',
+    'CD8_Tpex':   '#F39B7F',
+    'CD8_Teff':   '#4DBBD5',
+    'Treg':       '#3C5488',
+    'Th17':       '#00A087',
+    'CD4_Tconv':  '#7E6148',
+    'Tfh':        '#B09C85',
+    'gdT':        '#8491B4',
     'Unknown_T':  '#CCCCCC',
 }
 MYELOID_COLORS = {
-    'TAM':            '#D62728',  # tab:red
-    'Inflam_Mac':     '#FF7F0E',  # tab:orange
-    'Classical_Mono': '#1F77B4',  # tab:blue
-    'NonClass_Mono':  '#2CA02C',  # tab:green
-    'cDC1':           '#9467BD',  # tab:purple
-    'cDC2':           '#17BECF',  # tab:cyan
-    'pDC':            '#E377C2',  # tab:pink
+    'TAM':            '#E64B35',
+    'Inflam_Mac':     '#F39B7F',
+    'Classical_Mono': '#4DBBD5',
+    'NonClass_Mono':  '#00A087',
+    'cDC1':           '#3C5488',
+    'cDC2':           '#8491B4',
+    'pDC':            '#B09C85',
     'Unknown_My':     '#CCCCCC',
 }
 
