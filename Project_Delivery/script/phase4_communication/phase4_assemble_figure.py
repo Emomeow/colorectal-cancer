@@ -52,7 +52,7 @@ for ax, (fname, label) in zip(axes.flat, panels):
             color="black")
 
 fig4.suptitle(
-    "Figure 4  —  OLR1⁺ TAMs Induce Immune Evasion: Communication & Metabolic Mechanisms",
+    "Figure 4  —  OLR1+ TAMs Induce Immune Evasion: Communication & Metabolic Mechanisms",
     fontsize=14, fontweight="bold", y=0.98)
 
 for out in [OUT_DIRS[0], OUT_DIRS[1]]:
@@ -69,7 +69,7 @@ import pandas as pd
 import matplotlib.gridspec as gridspec
 
 fig5, axes5 = plt.subplots(1, 2, figsize=(16, 7))
-fig5.subplots_adjust(wspace=0.1, left=0.02, right=0.98, top=0.92, bottom=0.02)
+fig5.subplots_adjust(wspace=0.1, left=0.02, right=0.98, top=0.82, bottom=0.02)
 
 # Panel A: Myofibroblast -> SPP1+B communication (complement reverse direction)
 print("Supp Fig 5A: Myofibroblast -> OLR1+ TAM reverse comm...")
@@ -102,7 +102,7 @@ rows_plot = []
 for _, r in top_rev.iterrows():
     rows_plot.append((
         r.source,
-        f"{r.ligand_complex} → {r.receptor_complex}",
+        f"{r.ligand_complex} -> {r.receptor_complex}",
         r.lr_means,
         r.strength,
         src_colors5.get(r.source, "#999999"),
@@ -118,7 +118,7 @@ for i, (src, lr_label, lr_mean, strength, color) in enumerate(rows_plot):
 
 ax5a.set_yticks([])
 ax5a.set_xlabel("Mean LR expression", fontsize=9)
-ax5a.set_title("A  Reverse Communication:\nStromal/Myofibroblast → OLR1⁺ TAMs",
+ax5a.set_title("A  Reverse Communication:\nStromal/Myofibroblast -> OLR1+ TAMs",
                fontsize=10, fontweight="bold", loc="left")
 ax5a.spines[["top","right","left"]].set_visible(False)
 
@@ -136,7 +136,7 @@ pw_df = pd.read_csv("phase4_results/panelF_pathway_scores.csv")
 pw_df["log2fc"] = pw_df["log2fc"].round(3)
 pw_df["pval"]   = pw_df["pval"].apply(lambda p: f"{p:.3e}")
 pw_df["dir"]    = pw_df.apply(
-    lambda r: "MMRp↑" if r["direction"] == "MMRp↑" else "MMRd↑", axis=1)
+    lambda r: "MMRp+" if r["direction"] == "MMRp_up" else "MMRd+", axis=1)
 pw_df["sig"]    = pw_df["sig"].map({True:"*", False:"n.s."})
 
 cols = ["pathway","log2fc","pval","sig","dir"]
@@ -160,15 +160,15 @@ for j in range(len(col_labels)):
 
 # Color rows by direction
 for i, row in enumerate(pw_df.itertuples()):
-    fc_color = "#FDECEA" if row.direction == "MMRp↑" else "#EBF5FB"
+    fc_color = "#FDECEA" if row.direction == "MMRp_up" else "#EBF5FB"
     for j in range(len(cols)):
         table[(i+1, j)].set_facecolor(fc_color)
 
-ax5b.set_title("B  Metabolic Pathway Scores: OLR1⁺ TAMs\nMMRp vs MMRd (GSE178341)",
+ax5b.set_title("B  Metabolic Pathway Scores: OLR1+ TAMs\nMMRp vs MMRd (GSE178341)",
                fontsize=10, fontweight="bold", loc="left")
 
 fig5.suptitle("Supp Fig 5  —  Supplementary: Reverse Communication & Metabolic Summary",
-              fontsize=12, fontweight="bold", y=0.97)
+              fontsize=12, fontweight="bold", y=0.96)
 
 for out in [OUT_DIRS[0], OUT_DIRS[2]]:
     fig5.savefig(out / "suppFig5_metabolism_supp.png", dpi=200, bbox_inches="tight")

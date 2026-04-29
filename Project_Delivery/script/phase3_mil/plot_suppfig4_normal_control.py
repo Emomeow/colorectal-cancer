@@ -111,8 +111,8 @@ ax.plot([0.75, 1.25],  [np.mean(n_normal)]*2, color=C_NORMAL, lw=2.5)
 
 ax.set_xticks([0, 1])
 ax.set_xticklabels(["Tumor", "Normal"], fontsize=10)
-ax.set_ylabel("Number of OLR1⁺ TAM cells\nper patient", fontsize=9)
-ax.set_title("A  OLR1⁺ TAM Cell Abundance", fontsize=10, fontweight="bold", loc="left")
+ax.set_ylabel("Number of OLR1+ TAM cells\nper patient", fontsize=9)
+ax.set_title("A  OLR1+ TAM Cell Abundance", fontsize=10, fontweight="bold", loc="left")
 ax.spines[["top","right"]].set_visible(False)
 # 标注 p 值
 y_max = max(n_tumor.max(), n_normal.max()) * 1.08
@@ -139,7 +139,7 @@ ax.plot([0.75, 1.25],  [np.mean(prop_n)]*2, color=C_NORMAL, lw=2.5)
 
 ax.set_xticks([0, 1])
 ax.set_xticklabels(["Tumor", "Normal"], fontsize=10)
-ax.set_ylabel("OLR1⁺ TAM proportion\n(Macro / Macro+TCD8+TCD4)", fontsize=9)
+ax.set_ylabel("OLR1+ TAM proportion\n(Macro / Macro+TCD8+TCD4)", fontsize=9)
 ax.set_title("B  Relative Immune Cell Composition", fontsize=10, fontweight="bold", loc="left")
 ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(xmax=1, decimals=0))
 ax.spines[["top","right"]].set_visible(False)
@@ -191,7 +191,7 @@ if len(tcd8_t) == len(tcd8_n):
             ha="center", fontsize=9, color="black")
 
 ax.set_xticks(list(positions.values()))
-ax.set_xticklabels(["OLR1⁺ TAMs\n(Macro)", "TCD8"], fontsize=9)
+ax.set_xticklabels(["OLR1+ TAMs\n(Macro)", "TCD8"], fontsize=9)
 ax.set_ylabel("Relative attention ratio\n(subtype mean / all-cell mean)", fontsize=9)
 ax.set_title("C  Per-cell Attention: Tumor vs Normal", fontsize=10, fontweight="bold", loc="left")
 ax.spines[["top","right"]].set_visible(False)
@@ -204,18 +204,18 @@ ax.legend(handles=[patch_t, patch_n], fontsize=8, frameon=False,
 
 # ── 总标题 ───────────────────────────────────────────────────────
 fig.suptitle(
-    "Supp Fig 4 — OLR1⁺ TAMs are tumor-specific: paired tumor vs normal mucosa negative control\n"
+    "Supp Fig 4 — OLR1+ TAMs are tumor-specific: paired tumor vs normal mucosa negative control\n"
     "(GSE132465, n = 10 patients, SMC01–SMC10)",
     fontsize=10, y=0.99, ha="center"
 )
 
 # ── 图注 ─────────────────────────────────────────────────────────
 caption = (
-    "Panels A & B: OLR1⁺ lipid-associated TAMs (Macro) are markedly depleted in normal colonic mucosa. "
+    "Panels A & B: OLR1+ lipid-associated TAMs (Macro) are markedly depleted in normal colonic mucosa. "
     "A: absolute cell count (Tumor mean=331 vs Normal mean=25, paired Wilcoxon). "
     "B: proportion among three major immune subsets. "
     "C: per-cell relative attention ratio (r = mean_subtype / mean_all). "
-    "TCD8 shows the expected tumor↑/normal↓ pattern (validates model). "
+    "TCD8 shows the expected tumor(hi)/normal(lo) pattern (validates model). "
     "Macro shows anomalously high per-cell attention in Normal (OOD effect: rare Macro cells in Normal bags "
     "lie outside the training distribution of tumor-abundant Macro). "
     "Lines in A & B connect paired patients. Horizontal bars = medians (C) or means (A & B)."

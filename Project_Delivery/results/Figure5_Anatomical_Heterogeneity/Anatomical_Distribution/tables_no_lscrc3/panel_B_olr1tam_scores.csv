@@ -1,0 +1,6 @@
+sample,side,n_cells,olr1_prop_myeloid,mean_OLR1TAM_score
+WGC,Left,3876,0.4995,-0.0624
+JCA,Left,2845,0.5,-0.0106
+RS-CRC1,Right,5752,0.4997,-0.0579
+R_CRC3,Right,3875,0.5,-0.0481
+R_CRC4,Right,4068,0.4996,0.0303

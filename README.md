@@ -163,7 +163,7 @@ QC filters: mitochondrial gene fraction <= 10%, Scrublet doublet removal.
 
 ![Figure 3B — ROC & PR Curves](Project_Delivery/results/Figure3_MIL_MMR_Prediction/MIL_Model_Performance/figures/figure3B_panelB_roc_pr.png)
 
-*ROC (AUC = 0.909) and precision-recall (AUPRC = 0.922) curves across 5-fold cross-validation.*
+*ROC (OOF AUC = 0.909, mean fold AUC = 0.951, 95% CI: 0.858–1.000) and precision-recall (AUPRC = 0.922) curves across 5-fold cross-validation.*
 
 ![Figure 3C — Attention UMAP](Project_Delivery/results/Figure3_MIL_MMR_Prediction/Attention_Analysis/figures/figure3C_attention_umap.png)
 
@@ -322,18 +322,40 @@ QC filters: mitochondrial gene fraction <= 10%, Scrublet doublet removal.
 
 ```
 Project_Delivery/
-├── report_phase2.pdf
-├── report_phase3.pdf
-├── report_phase4.pdf
-├── report_phase5.pdf
-└── results/
-    ├── Figure1_scVI_Atlas/
-    ├── Figure2_Pre_driver_Trajectory/
-    ├── Figure3_MIL_MMR_Prediction/
-    ├── Figure4_Communication_Metabolism/
-    ├── Figure5_Anatomical_Heterogeneity/
-    ├── Figure6_Bulk_Clinical_Validation/
-    └── Supplementary/
+├── report_phase1.pdf          # Phase 1 report (scVI atlas)
+├── report_phase2.pdf          # Phase 2 report (trajectory + TME)
+├── report_phase3.pdf          # Phase 3 report (MIL model)
+├── report_phase4.pdf          # Phase 4 report (communication + metabolism)
+├── report_phase5.pdf          # Phase 5 report (anatomical validation + survival)
+├── results/
+│   ├── Figure1_scVI_Atlas/
+│   │   └── Cluster_Stability/figures/fig1_panelEF.png  ← left panel redrawn from scib_metrics.csv
+│   ├── Figure2_Pre_driver_Trajectory/
+│   │   └── (4 figures Unicode-patched: dotplot, strip_myeloid, strip_tcell, pseudotime_overview)
+│   ├── Figure3_MIL_MMR_Prediction/
+│   │   ├── MIL_Model_Performance/figures/figure3B_panelB_roc_pr.png  ← CI added to legend
+│   │   ├── MIL_Model_Performance/tables/cv_auc_summary.csv           ← 5-fold AUC + 95% CI table
+│   │   └── Transfer_Validation/figures/figure3F_transfer_validation.png  ← xlabel □ fixed
+│   ├── Figure4_Communication_Metabolism/
+│   ├── Figure5_Anatomical_Heterogeneity/
+│   │   └── Anatomical_Distribution/
+│   │       ├── figures/           (6 individual panels: A–F, PNG + Illustrator PDF)
+│   │       ├── figures_no_lscrc3/ (same 6 panels excluding LS-CRC3 sensitivity set)
+│   │       ├── tables/            (panel_B/C/D CSV tables)
+│   │       └── tables_no_lscrc3/  (same tables for sensitivity analysis)
+│   ├── Figure6_Bulk_Clinical_Validation/
+│   │   ├── Deconvolution/figures/figure6A_deconvolution.png  (individual panel)
+│   │   └── Survival_Analysis/figures/figure6B/C/D_*.png      (individual panels)
+│   └── Supplementary/
+└── script/
+    ├── phase1_integration/
+    ├── phase2_trajectory/
+    ├── phase3_mil/
+    ├── phase4_communication/
+    └── phase5_validation/
+        ├── phase5_figure5_panels.py
+        ├── phase5_figure5_panels_no_lscrc3.py
+        └── phase6_figure6_panels.py
 ```
 
 ---
@@ -353,7 +375,17 @@ Project_Delivery/
 | `phase4_metabolism_panels.py` | 4 | NicheNet panel C visualization |
 | `scmetabolism_aucell.R` | 4 | AUCell metabolic scoring (R) |
 | `phase4_mechanism_EN.py` | 4 | Mechanism model diagram |
-| `phase5_figure6.py` | 5 | KM curves + Cox regression |
+| `phase5_figure5_panels.py` | 5a | Figure 5 individual panel export (PNG + Illustrator PDF) |
+| `phase5_figure5_panels_no_lscrc3.py` | 5a | Figure 5 panels excluding LS-CRC3 sensitivity analysis |
+| `phase6_figure6_panels.py` | 5b | Figure 6 individual panel export (KM + Cox, PNG + Illustrator PDF) |
+
+### Figure Correction Scripts
+
+| Script | Target | Fix Applied |
+|--------|--------|-------------|
+| `fix_fig1_panelEF.py` | Figure 1F | Left panel redrawn from `scib_metrics.csv` aggregate values (bar chart); right panel preserved via PIL crop |
+| `fix_fig2_unicode.py` | Figure 2 (4 figures) | Arial Unicode rendering failures (□) patched: `log₂FC`→`log2FC`, `◆`→`(D)` |
+| `fix_fig3_final.py` | Figure 3B, 3F | 3B ROC legend updated with 95% CI `[0.858, 1.000]`; 3F xlabel `"热"`→`"Hot"` |
 
 ---
 

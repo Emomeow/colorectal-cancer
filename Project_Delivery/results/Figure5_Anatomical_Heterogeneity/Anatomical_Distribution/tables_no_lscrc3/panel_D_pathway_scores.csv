@@ -1,0 +1,6 @@
+pathway,left_mean,right_mean,log2fc,pval,sig
+T cell Exclusion,0.23158,0.212035,-0.1272,0.723679,n.s.
+Matrix Remodeling,0.209275,0.189296,-0.1448,0.849927,n.s.
+Lipid Metabolism,0.275492,0.275675,0.001,0.997336,n.s.
+Angiogenesis,0.25908,0.20943,-0.3069,0.535998,n.s.
+Immune Suppression,0.163831,0.155627,-0.0741,0.764296,n.s.
